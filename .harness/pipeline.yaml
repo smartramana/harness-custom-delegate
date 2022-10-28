@@ -1,0 +1,69 @@
+pipeline:
+  name: Custom Delegate
+  identifier: Custom_Delegate
+  projectIdentifier: Konr
+  orgIdentifier: SE_Sandbox
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: Konr_Github
+        repoName: harness-custom-delegate
+        build: <+input>
+  stages:
+    - stage:
+        name: Build Delegate
+        identifier: Build_Delegate
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          infrastructure:
+            type: KubernetesDirect
+            spec:
+              connectorRef: account.cidemo
+              namespace: konr-se-sandbox
+              nodeSelector: {}
+              os: Linux
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Fetch Latest Delegate Tag
+                  identifier: Fetch_Latest_Delegate_Tag
+                  spec:
+                    connectorRef: konrness_Docker_Hub
+                    image: curl
+                    shell: Sh
+                    command: |-
+                      # get token to be able to talk to Docker Hub
+                      TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${DOCKER_USERNAME}'", "password": "'${DOCKER_PASSWORD}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
+
+                      # get tags for repo
+                      IMAGE_TAGS=$(curl -s -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${IMAGE_NAME}/tags/?page_size=100 | jq -r '.results|.[]|.name')
+
+                      # build a list of images from tags
+                      for j in ${IMAGE_TAGS}
+                      do
+                        # filter tag list to matching regex
+                        if [[ "${j}" =~ $TAG_REGEX ]]; then
+                          # add matching tag to list
+                          TAG_LIST="${TAG_LIST} ${j}"
+                        fi
+                      done
+
+                      # output list of all docker images
+                      echo "All tags available:"
+                      for i in ${TAG_LIST}
+                      do
+                        echo ${i}
+                      done
+
+                      echo "\Selected tag:"
+                      SELECTED_TAG=$(echo ${TAG_LIST} | cut -d ' ' -f1)
+                      echo ${SELECTED_TAG}
+                    envVariables:
+                      IMAGE_NAME: harness/delegate
+                      TAG_REGEX: "[0-9]{2}\\.[0-9]{2}\\.[0-9]+$"
+                      DOCKER_USERNAME: asdf
+                      DOCKER_PASSWORD: asdf
