@@ -67,6 +67,23 @@ pipeline:
                       TAG_REGEX: "[0-9]{2}\\.[0-9]{2}\\.[0-9]+$"
                       DOCKER_USERNAME: <+pipeline.variables.docker_username>
                       DOCKER_PASSWORD: <+pipeline.variables.docker_password>
+                    outputVariables:
+                      - name: SELECTED_TAG
+              - step:
+                  type: Run
+                  name: Update Dockerfile
+                  identifier: Update_Dockerfile
+                  spec:
+                    connectorRef: konrness_Docker_Hub
+                    image: alpine
+                    shell: Sh
+                    command: |-
+                      sed -i.bak "1 s/latest/${SELECTED_TAG}/" ${DOCKERFILE}
+
+                      cat ${DOCKERFILE}
+                    envVariables:
+                      DOCKERFILE: <+pipeline.variables.dockerfile>
+                      SELECTED_TAG: <+execution.steps.Fetch_Latest_Delegate_Tag.output.outputVariables.SELECTED_TAG>
   variables:
     - name: docker_username
       type: String
@@ -76,3 +93,7 @@ pipeline:
       type: Secret
       description: ""
       value: konrness_DockerHub
+    - name: dockerfile
+      type: String
+      description: ""
+      value: Dockerfile-gcloud
