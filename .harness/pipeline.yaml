@@ -94,6 +94,7 @@ pipeline:
                     tags:
                       - <+execution.steps.Fetch_Latest_Delegate_Tag.output.outputVariables.SELECTED_TAG>
                     dockerfile: Dockerfile-<+pipeline.variables.image_suffix>
+                    remoteCacheRepo: konrness/harness-build-layer-cache
                     resources:
                       limits:
                         memory: 1.5Gi
