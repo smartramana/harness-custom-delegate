@@ -78,12 +78,22 @@ pipeline:
                     image: alpine
                     shell: Sh
                     command: |-
-                      sed -i.bak "1 s/latest/${SELECTED_TAG}/" ${DOCKERFILE}
+                      sed -i.bak "1 s/latest/${SELECTED_TAG}/" Dockerfile-${SUFFIX}
 
-                      cat ${DOCKERFILE}
+                      cat Dockerfile-${SUFFIX}
                     envVariables:
-                      DOCKERFILE: <+pipeline.variables.dockerfile>
                       SELECTED_TAG: <+execution.steps.Fetch_Latest_Delegate_Tag.output.outputVariables.SELECTED_TAG>
+                      SUFFIX: <+pipeline.variables.image_suffix>
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: Build and Push
+                  identifier: Build_and_Push
+                  spec:
+                    connectorRef: konrness_Docker_Hub
+                    repo: konrness/harness-delegate-<+suffix>
+                    tags:
+                      - <+imagetag>
+                    dockerfile: Dockerfile-<+suffix>
   variables:
     - name: docker_username
       type: String
@@ -97,3 +107,7 @@ pipeline:
       type: String
       description: ""
       value: Dockerfile-gcloud
+    - name: image_suffix
+      type: String
+      description: ""
+      value: gcloud
