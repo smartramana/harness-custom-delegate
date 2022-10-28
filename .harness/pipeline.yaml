@@ -65,8 +65,8 @@ pipeline:
                     envVariables:
                       IMAGE_NAME: harness/delegate
                       TAG_REGEX: "[0-9]{2}\\.[0-9]{2}\\.[0-9]+$"
-                      DOCKER_USERNAME: asdf
-                      DOCKER_PASSWORD: asdf
+                      DOCKER_USERNAME: <+pipeline.variables.docker_username>
+                      DOCKER_PASSWORD: <+pipeline.variables.docker_password>
   variables:
     - name: docker_username
       type: String
