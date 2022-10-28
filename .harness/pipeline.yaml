@@ -90,10 +90,10 @@ pipeline:
                   identifier: Build_and_Push
                   spec:
                     connectorRef: konrness_Docker_Hub
-                    repo: konrness/harness-delegate-<+suffix>
+                    repo: konrness/harness-delegate-<+pipeline.variables.image_suffix>
                     tags:
-                      - <+imagetag>
-                    dockerfile: Dockerfile-<+suffix>
+                      - <+execution.steps.Fetch_Latest_Delegate_Tag.output.outputVariables.SELECTED_TAG>
+                    dockerfile: Dockerfile-<+pipeline.variables.image_suffix>
   variables:
     - name: docker_username
       type: String
