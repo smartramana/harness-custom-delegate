@@ -33,7 +33,7 @@ pipeline:
                   identifier: Fetch_Latest_Delegate_Tag
                   spec:
                     connectorRef: konrness_Docker_Hub
-                    image: curl
+                    image: dwdraju/alpine-curl-jq
                     shell: Sh
                     command: |-
                       # get token to be able to talk to Docker Hub
