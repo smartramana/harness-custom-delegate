@@ -107,11 +107,7 @@ pipeline:
       type: Secret
       description: ""
       value: konrness_DockerHub
-    - name: dockerfile
-      type: String
-      description: ""
-      value: Dockerfile-gcloud
     - name: image_suffix
       type: String
       description: ""
-      value: gcloud
+      value: <+input>.allowedValues(gcloud)
