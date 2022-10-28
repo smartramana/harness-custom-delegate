@@ -67,3 +67,12 @@ pipeline:
                       TAG_REGEX: "[0-9]{2}\\.[0-9]{2}\\.[0-9]+$"
                       DOCKER_USERNAME: asdf
                       DOCKER_PASSWORD: asdf
+  variables:
+    - name: docker_username
+      type: String
+      description: ""
+      value: konrness
+    - name: docker_password
+      type: Secret
+      description: ""
+      value: konrness_DockerHub
