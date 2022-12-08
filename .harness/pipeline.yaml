@@ -37,31 +37,41 @@ pipeline:
                         image: dwdraju/alpine-curl-jq
                         shell: Sh
                         command: |-
-                          # get token to be able to talk to Docker Hub
-                          TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${DOCKER_USERNAME}'", "password": "'${DOCKER_PASSWORD}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
+                          if [ -z "<+trigger.artifact.build>" ]
+                          then
+                            # Pipeline was triggered off of a new artifact tag, so use that tag
+                            SELECTED_TAG="<+trigger.artifact.build>"
+                          else
+                            # Pipeline was manually triggered, so fetch the latest delegate image from API
 
-                          # get tags for repo
-                          IMAGE_TAGS=$(curl -s -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${IMAGE_NAME}/tags/?page_size=100 | jq -r '.results|.[]|.name')
+                            # get token to be able to talk to Docker Hub
+                            TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${DOCKER_USERNAME}'", "password": "'${DOCKER_PASSWORD}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
 
-                          # build a list of images from tags
-                          for j in ${IMAGE_TAGS}
-                          do
-                            # filter tag list to matching regex
-                            if [[ "${j}" =~ $TAG_REGEX ]]; then
-                              # add matching tag to list
-                              TAG_LIST="${TAG_LIST} ${j}"
-                            fi
-                          done
+                            # get tags for repo
+                            IMAGE_TAGS=$(curl -s -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${IMAGE_NAME}/tags/?page_size=100 | jq -r '.results|.[]|.name')
 
-                          # output list of all docker images
-                          echo "All tags available:"
-                          for i in ${TAG_LIST}
-                          do
-                            echo ${i}
-                          done
+                            # build a list of images from tags
+                            for j in ${IMAGE_TAGS}
+                            do
+                              # filter tag list to matching regex
+                              if [[ "${j}" =~ $TAG_REGEX ]]; then
+                                # add matching tag to list
+                                TAG_LIST="${TAG_LIST} ${j}"
+                              fi
+                            done
 
-                          echo "\Selected tag:"
-                          SELECTED_TAG=$(echo ${TAG_LIST} | cut -d ' ' -f1)
+                            # output list of all docker images
+                            echo "All tags available:"
+                            for i in ${TAG_LIST}
+                            do
+                              echo ${i}
+                            done
+
+                            echo "\Selected tag:"
+                            SELECTED_TAG=$(echo ${TAG_LIST} | cut -d ' ' -f1)
+
+                          fi
+
                           echo ${SELECTED_TAG}
                         envVariables:
                           IMAGE_NAME: harness/delegate
@@ -83,30 +93,39 @@ pipeline:
                         image: dwdraju/alpine-curl-jq
                         shell: Sh
                         command: |-
-                          # get supported delegates for Harness Account
-                          IMAGE_TAGS=$(curl -s -H "x-api-key: ${API_KEY}" https://app.harness.io/gateway/api/version/supportedDelegate?accountId=${ACCOUNT_ID} | jq -r '.results|.[]|.name')
+                          if [ -z "<+trigger.artifact.build>" ]
+                          then
+                            # Pipeline was triggered off of a new artifact tag, so use that tag
+                            SELECTED_TAG="<+trigger.artifact.build>"
+                          else
 
-                          # TODO: Once this API is released update this JSON parsing to expose SELECTED_TAG env var
+                            # get supported delegates for Harness Account
+                            IMAGE_TAGS=$(curl -s -H "x-api-key: ${API_KEY}" https://app.harness.io/gateway/api/version/supportedDelegate?accountId=${ACCOUNT_ID} | jq -r '.results|.[]|.name')
 
-                          # build a list of images from tags
-                          for j in ${IMAGE_TAGS}
-                          do
-                            # filter tag list to matching regex
-                            if [[ "${j}" =~ $TAG_REGEX ]]; then
-                              # add matching tag to list
-                              TAG_LIST="${TAG_LIST} ${j}"
-                            fi
-                          done
+                            # TODO: Once this API is released update this JSON parsing to expose SELECTED_TAG env var
 
-                          # output list of all docker images
-                          echo "All tags available:"
-                          for i in ${TAG_LIST}
-                          do
-                            echo ${i}
-                          done
+                            # build a list of images from tags
+                            for j in ${IMAGE_TAGS}
+                            do
+                              # filter tag list to matching regex
+                              if [[ "${j}" =~ $TAG_REGEX ]]; then
+                                # add matching tag to list
+                                TAG_LIST="${TAG_LIST} ${j}"
+                              fi
+                            done
 
-                          echo "\Selected tag:"
-                          SELECTED_TAG=$(echo ${TAG_LIST} | cut -d ' ' -f1)
+                            # output list of all docker images
+                            echo "All tags available:"
+                            for i in ${TAG_LIST}
+                            do
+                              echo ${i}
+                            done
+
+                            echo "\Selected tag:"
+                            SELECTED_TAG=$(echo ${TAG_LIST} | cut -d ' ' -f1)
+
+                          fi
+
                           echo ${SELECTED_TAG}
                         envVariables:
                           ACCOUNT_ID: <+pipeline.variables.account_id>
