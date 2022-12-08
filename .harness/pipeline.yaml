@@ -107,6 +107,10 @@ pipeline:
                         envVariables:
                           ACCOUNT_ID: <+pipeline.variables.account_id>
                           API_KEY: <+pipeline.variables.harness_api_key>
+                      when:
+                        stageStatus: Success
+                        condition: true==false
+                      failureStrategies: []
               - step:
                   type: Run
                   name: Update Dockerfile
