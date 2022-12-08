@@ -162,3 +162,15 @@ pipeline:
       type: Secret
       description: ""
       value: konrharnesspat
+  notificationRules:
+    - name: New Delegate Version Notification
+      identifier: New_Delegate_Version_Notification
+      pipelineEvents:
+        - type: PipelineStart
+      notificationMethod:
+        type: Email
+        spec:
+          userGroups: []
+          recipients:
+            - konr.ness@harness.io
+      enabled: true
