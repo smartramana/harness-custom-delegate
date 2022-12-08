@@ -70,6 +70,10 @@ pipeline:
                           DOCKER_PASSWORD: <+pipeline.variables.docker_password>
                         outputVariables:
                           - name: SELECTED_TAG
+                      when:
+                        stageStatus: Success
+                        condition: <+pipeline.triggerType>=="newartifact"
+                      failureStrategies: []
                   - step:
                       type: Run
                       name: Fetch Latest Delegate Tag from API
