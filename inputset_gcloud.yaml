@@ -1,0 +1,18 @@
+inputSet:
+  identifier: "gcloud_inputset"
+  name: "gcloud inputset"
+  orgIdentifier: "SE_Sandbox"
+  projectIdentifier: "Konr"
+  pipeline:
+    identifier: "Custom_Delegate"
+    properties:
+      ci:
+        codebase:
+          build:
+            type: "branch"
+            spec:
+              branch: "main"
+    variables:
+    - name: "image_suffix"
+      type: "String"
+      value: "gcloud"
