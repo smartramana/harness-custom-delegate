@@ -37,7 +37,12 @@ pipeline:
                         image: dwdraju/alpine-curl-jq
                         shell: Sh
                         command: |-
-                          if [ -z "<+trigger.artifact.build>" ]
+                          # Testing
+                          echo <+trigger.type>
+                          echo <+pipeline.triggerType>
+                          echo <+trigger.artifact.build>
+
+                          if [ "<+trigger.type>" = "new_artifact"  ]
                           then
                             # Pipeline was triggered off of a new artifact tag, so use that tag
                             SELECTED_TAG="<+trigger.artifact.build>"
