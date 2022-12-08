@@ -82,7 +82,6 @@ pipeline:
                           - name: SELECTED_TAG
                       when:
                         stageStatus: Success
-                        condition: <+pipeline.triggerType>=="newartifact"
                       failureStrategies: []
                   - step:
                       type: Run
