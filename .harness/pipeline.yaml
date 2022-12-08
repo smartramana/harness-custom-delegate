@@ -79,12 +79,10 @@ pipeline:
                         image: dwdraju/alpine-curl-jq
                         shell: Sh
                         command: |-
-                          curl -i -X GET "https://app.harness.io/gateway/api/version/supportedDelegate?accountId=6_vVHzo9Qeu9fXvj-AcbCQ" -H 'x-api-key: pat.6_vVHzo9Qeu9fXvj-AcbCQ.639223d96314ed0c76830103.UfVfgBvVKSLRFoGVCkck'
+                          # get supported delegates for Harness Account
+                          IMAGE_TAGS=$(curl -s -H "x-api-key: ${API_KEY}" https://app.harness.io/gateway/api/version/supportedDelegate?accountId=${ACCOUNT_ID} | jq -r '.results|.[]|.name')
 
-
-
-                          # get tags for repo
-                          IMAGE_TAGS=$(curl -s -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${IMAGE_NAME}/tags/?page_size=100 | jq -r '.results|.[]|.name')
+                          # TODO: Once this API is released update this JSON parsing to expose SELECTED_TAG env var
 
                           # build a list of images from tags
                           for j in ${IMAGE_TAGS}
@@ -107,8 +105,8 @@ pipeline:
                           SELECTED_TAG=$(echo ${TAG_LIST} | cut -d ' ' -f1)
                           echo ${SELECTED_TAG}
                         envVariables:
-                          ACCOUNT_ID: <+input>
-                          API_KEY: <+input>
+                          ACCOUNT_ID: <+pipeline.variables.account_id>
+                          API_KEY: <+pipeline.variables.harness_api_key>
               - step:
                   type: Run
                   name: Update Dockerfile
@@ -155,7 +153,7 @@ pipeline:
     - name: account_id
       type: String
       description: ""
-      value: <+account.id>
+      value: <+account.identifier>
     - name: harness_api_key
       type: Secret
       description: ""
