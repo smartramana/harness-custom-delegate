@@ -8,7 +8,6 @@ LABEL source="https://github.com/konrness/harness-custom-delegate"
 # See https://cloud.google.com/sdk/docs/install#rpm
 USER 0
 
-ENV TERRAFORM_VERSION="${TERRAFORM_VERSION}"
 RUN echo Install terraform ${TERRAFORM_VERSION} && \
     microdnf -y install unzip && \
     curl -O -L https://releases.hashicorp.com/terraform/1.3.5/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
