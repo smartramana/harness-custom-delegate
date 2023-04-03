@@ -41,11 +41,16 @@ pipeline:
                           echo <+trigger.type>
                           echo <+pipeline.triggerType>
                           echo <+trigger.artifact.build>
+                          echo <+pipeline.variables.override_image_tag>
 
                           if [ "<+trigger.type>" = "new_artifact"  ]
                           then
                             # Pipeline was triggered off of a new artifact tag, so use that tag
                             SELECTED_TAG="<+trigger.artifact.build>"
+                          elif [ "<+pipeline.variables.override_image_tag>" != "" ]
+                          then
+                            # An override image tag was provided as run-time input
+                            SELECTED_TAG="<+pipeline.variables.override_image_tag>"
                           else
                             # Pipeline was manually triggered, so fetch the latest delegate image from API
 
@@ -176,6 +181,10 @@ pipeline:
       type: Secret
       description: ""
       value: konrharnesspat
+    - name: override_image_tag
+      type: String
+      description: ""
+      value: <+input>
   notificationRules:
     - name: New Delegate Version Notification
       identifier: New_Delegate_Version_Notification
