@@ -1,0 +1,19 @@
+ARG BASE_IMAGE_TAG
+FROM harness/delegate:${BASE_IMAGE_TAG}
+ARG TERRAFORM_VERSION="1.3.5"
+
+LABEL maintainer="konrness@gmail.com"
+LABEL source="https://github.com/konrness/harness-custom-delegate"
+
+# See https://cloud.google.com/sdk/docs/install#rpm
+USER 0
+
+ENV TERRAFORM_VERSION="${TERRAFORM_VERSION}"
+RUN echo Install terraform ${TERRAFORM_VERSION} && \
+    microdnf -y install unzip && \
+    curl -O -L https://releases.hashicorp.com/terraform/1.3.5/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+    unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+    mv ./terraform /usr/bin/ && \
+    terraform --version
+
+USER 1001

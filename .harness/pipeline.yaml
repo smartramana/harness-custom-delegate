@@ -172,7 +172,7 @@ pipeline:
     - name: image_suffix
       type: String
       description: ""
-      value: <+input>.allowedValues(gcloud)
+      value: <+input>.allowedValues(gcloud,terraform)
     - name: account_id
       type: String
       description: ""
