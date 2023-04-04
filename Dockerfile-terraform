@@ -11,6 +11,7 @@ USER 0
 
 RUN echo Install terraform ${TERRAFORM_VERSION} && \
     microdnf -y install unzip && \
+    microdnf clean all && \
     curl -O -L https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
     unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
     mv ./terraform /usr/bin/ && \
