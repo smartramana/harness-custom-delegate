@@ -6,7 +6,6 @@ LABEL TERRAFORM_VERSION=${TERRAFORM_VERSION}
 LABEL maintainer="konrness@gmail.com"
 LABEL source="https://github.com/konrness/harness-custom-delegate"
 
-# See https://cloud.google.com/sdk/docs/install#rpm
 USER 0
 
 RUN echo Install terraform ${TERRAFORM_VERSION} && \
