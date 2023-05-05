@@ -1,5 +1,5 @@
 ARG BASE_IMAGE_TAG
-FROM harness/delegate:${BASE_IMAGE_TAG}
+FROM app.harness.io/registry/harness/delegate:${BASE_IMAGE_TAG}
 
 LABEL maintainer="konrness@gmail.com"
 LABEL source="https://github.com/konrness/harness-custom-delegate"
