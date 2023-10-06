@@ -1,8 +1,8 @@
 pipeline:
   name: Custom Delegate
   identifier: Custom_Delegate
-  projectIdentifier: Konr
-  orgIdentifier: SE_Sandbox
+  projectIdentifier: Azure
+  orgIdentifier: default
   tags: {}
   properties:
     ci:
