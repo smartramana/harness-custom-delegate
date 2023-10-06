@@ -18,13 +18,6 @@ pipeline:
         type: CI
         spec:
           cloneCodebase: true
-          infrastructure:
-            type: KubernetesDirect
-            spec:
-              connectorRef: account.cidemo
-              namespace: konr-se-sandbox
-              nodeSelector: {}
-              os: Linux
           execution:
             steps:
               - parallel:
@@ -33,7 +26,7 @@ pipeline:
                       name: Fetch Latest Delegate Tag
                       identifier: Fetch_Latest_Delegate_Tag
                       spec:
-                        connectorRef: konrness_Docker_Hub
+                        connectorRef: account.Dockerhub
                         image: dwdraju/alpine-curl-jq
                         shell: Sh
                         command: |-
@@ -92,13 +85,12 @@ pipeline:
                           - name: SELECTED_TAG
                       when:
                         stageStatus: Success
-                      failureStrategies: []
                   - step:
                       type: Run
                       name: Fetch Latest Delegate Tag from API
                       identifier: Fetch_Latest_Delegate_Tag_from_API
                       spec:
-                        connectorRef: konrness_Docker_Hub
+                        connectorRef: account.Dockerhub
                         image: dwdraju/alpine-curl-jq
                         shell: Sh
                         command: |-
@@ -142,13 +134,12 @@ pipeline:
                       when:
                         stageStatus: Success
                         condition: true==false
-                      failureStrategies: []
               - step:
                   type: BuildAndPushDockerRegistry
                   name: Build and Push
                   identifier: Build_and_Push
                   spec:
-                    connectorRef: konrness_Docker_Hub
+                    connectorRef: account.Dockerhub
                     repo: konrness/harness-delegate-<+pipeline.variables.image_suffix>
                     tags:
                       - <+execution.steps.Fetch_Latest_Delegate_Tag.output.outputVariables.SELECTED_TAG>
@@ -160,6 +151,12 @@ pipeline:
                       limits:
                         memory: 3Gi
                         cpu: "1"
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
   variables:
     - name: docker_username
       type: String
