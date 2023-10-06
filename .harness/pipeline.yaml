@@ -157,11 +157,11 @@ pipeline:
     - name: docker_username
       type: String
       description: ""
-      value: konrness
+      value: smartramana
     - name: docker_password
       type: Secret
       description: ""
-      value: konrness_DockerHub
+      value: harnessoauthaccesstoken_github_1694361798516
     - name: image_suffix
       type: String
       description: ""
@@ -173,7 +173,7 @@ pipeline:
     - name: harness_api_key
       type: Secret
       description: ""
-      value: konrharnesspat
+      value: account.harnessoauthaccesstoken_github_1693613727748
     - name: override_image_tag
       type: String
       description: ""
