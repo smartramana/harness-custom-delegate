@@ -10,7 +10,7 @@ pipeline:
         identifier: Build_Delegate
         type: CI
         spec:
-          cloneCodebase: false
+          cloneCodebase: true
           execution:
             steps:
               - parallel:
@@ -190,3 +190,9 @@ pipeline:
           recipients:
             - konr.ness@harness.io
       enabled: true
+  properties:
+    ci:
+      codebase:
+        connectorRef: account.Github
+        repoName: harness-custom-delegate
+        build: <+input>
