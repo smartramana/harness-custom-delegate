@@ -4,20 +4,13 @@ pipeline:
   projectIdentifier: Azure
   orgIdentifier: default
   tags: {}
-  properties:
-    ci:
-      codebase:
-        connectorRef: Konr_Github
-        repoName: harness-custom-delegate
-        build: <+input>
   stages:
     - stage:
         name: Build Delegate
         identifier: Build_Delegate
-        description: ""
         type: CI
         spec:
-          cloneCodebase: true
+          cloneCodebase: false
           execution:
             steps:
               - parallel:
@@ -157,6 +150,9 @@ pipeline:
           runtime:
             type: Cloud
             spec: {}
+          caching:
+            enabled: false
+            paths: []
   variables:
     - name: docker_username
       type: String
