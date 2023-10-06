@@ -177,7 +177,7 @@ pipeline:
     - name: override_image_tag
       type: String
       description: ""
-      value: <+input>
+      value: <+input>.default(01)
   notificationRules:
     - name: New Delegate Version Notification
       identifier: New_Delegate_Version_Notification
