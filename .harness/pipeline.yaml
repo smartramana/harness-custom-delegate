@@ -133,7 +133,7 @@ pipeline:
                   identifier: Build_and_Push
                   spec:
                     connectorRef: account.Dockerhub
-                    repo: konrness/harness-delegate-<+pipeline.variables.image_suffix>
+                    repo: smartramana/harness-delegate-<+pipeline.variables.image_suffix>
                     tags:
                       - <+execution.steps.Fetch_Latest_Delegate_Tag.output.outputVariables.SELECTED_TAG>
                     dockerfile: Dockerfile-<+pipeline.variables.image_suffix>
@@ -188,7 +188,7 @@ pipeline:
         spec:
           userGroups: []
           recipients:
-            - konr.ness@harness.io
+            - smartramana@gmail.com
       enabled: true
   properties:
     ci:
