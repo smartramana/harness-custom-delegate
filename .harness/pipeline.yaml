@@ -1,8 +1,8 @@
 pipeline:
   name: Custom Delegate
   identifier: Custom_Delegate
-  projectIdentifier: Konr
-  orgIdentifier: SE_Sandbox
+  projectIdentifier: Azure
+  orgIdentifier: default
   tags: {}
   properties:
     ci:
@@ -33,7 +33,7 @@ pipeline:
                       name: Fetch Latest Delegate Tag
                       identifier: Fetch_Latest_Delegate_Tag
                       spec:
-                        connectorRef: konrness_Docker_Hub
+                        connectorRef: account.Dockerhub
                         image: dwdraju/alpine-curl-jq
                         shell: Sh
                         command: |-
@@ -92,13 +92,12 @@ pipeline:
                           - name: SELECTED_TAG
                       when:
                         stageStatus: Success
-                      failureStrategies: []
                   - step:
                       type: Run
                       name: Fetch Latest Delegate Tag from API
                       identifier: Fetch_Latest_Delegate_Tag_from_API
                       spec:
-                        connectorRef: konrness_Docker_Hub
+                        connectorRef: account.Dockerhub
                         image: dwdraju/alpine-curl-jq
                         shell: Sh
                         command: |-
@@ -142,7 +141,6 @@ pipeline:
                       when:
                         stageStatus: Success
                         condition: true==false
-                      failureStrategies: []
               - step:
                   type: BuildAndPushDockerRegistry
                   name: Build and Push
